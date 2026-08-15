@@ -1,0 +1,22 @@
+{
+  "name": "short-reminder",
+  "version": "0.0.0",
+  "scripts": {
+    "res:build": "rescript",
+    "res:clean": "rescript clean",
+    "res:dev": "rescript watch",
+    "build": "pnpm run res:build && esbuild --bundle ./src/Main.res.mjs --outfile=out.js"
+  },
+  "keywords": [
+    "rescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@rescript/runtime": "12.3.0",
+    "rescript": "12.3.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "short-reminder",
+  "sources": {
+    "dir": "src",
+    "subdirs": true
+  },
+  "package-specs": {
+    "module": "esmodule",
+    "in-source": true
+  },
+  "experimental-features": {
+    "LetUnwrap": true
+  },
+  "suffix": ".res.mjs",
+  "dependencies": [],
+  "compiler-flags": []
+}
