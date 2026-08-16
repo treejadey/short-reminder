@@ -31,6 +31,15 @@ let getWaitTime = (str: string): result<(waitTime, int), string> => {
           // 123d
           //    ^
           // counter = 2
+
+          // TODO: make it check the following case:
+          // 123dic
+          //    ^
+          // It gets the d, and then happily skips along and counts it as Days,
+          // while not giving a crap about anything else that comes afterwards.
+          //
+          // Should probably give an error instead? Makes sense to me
+
           Ok((c, counter))
         } else {
           Error("Argument doesn't start with a number.")
