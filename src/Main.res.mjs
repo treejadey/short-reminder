@@ -49,6 +49,12 @@ function getWaitTime(str) {
           _0: "Argument doesn't start with a number."
         };
       }
+      if (strToWaitTime(c) === "Unknown") {
+        return {
+          TAG: "Error",
+          _0: "Invalid character provided as duration. Only minutes, seconds, hours and days supported (m, s, h, d)"
+        };
+      }
       let match$1 = str[counter + 1 | 0];
       if (match$1 !== undefined) {
         return {

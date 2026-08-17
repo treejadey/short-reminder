@@ -42,9 +42,13 @@ let getWaitTime = (str: string): result<(waitTime, int), string> => {
           //    ^
           // counter = 2
 
-          switch str->String.get(counter + 1) {
-          | Some(_) => Error("Unexpected additional characters after time unit :tf:")
-          | None => Ok((c, counter))
+          if strToWaitTime(c) == Unknown {
+            Error("Invalid character provided as duration. Only minutes, seconds, hours and days supported (m, s, h, d)")
+          } else {
+            switch str->String.get(counter + 1) {
+            | Some(_) => Error("Unexpected additional characters after time unit :tf:")
+            | None => Ok((c, counter))
+            }
           }
         } else {
           Error("Argument doesn't start with a number.")
