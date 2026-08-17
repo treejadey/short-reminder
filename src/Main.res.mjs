@@ -2,6 +2,21 @@
 
 import * as Stdlib_Int from "@rescript/runtime/lib/es6/Stdlib_Int.js";
 
+function strToWaitTime(str) {
+  switch (str) {
+    case "d" :
+      return "Days";
+    case "h" :
+      return "Hours";
+    case "m" :
+      return "Minutes";
+    case "s" :
+      return "Seconds";
+    default:
+      return "Unknown";
+  }
+}
+
 function getWaitTime(str) {
   let parse = (str, _counter) => {
     while (true) {
@@ -24,24 +39,31 @@ function getWaitTime(str) {
         }
       }
       let match = Stdlib_Int.fromString(c, undefined);
-      if (match === undefined) {
-        if (counter > 0) {
-          return {
-            TAG: "Ok",
-            _0: [
-              c,
-              counter
-            ]
-          };
-        } else {
-          return {
-            TAG: "Error",
-            _0: "Argument doesn't start with a number."
-          };
-        }
+      if (match !== undefined) {
+        _counter = counter + 1 | 0;
+        continue;
       }
-      _counter = counter + 1 | 0;
-      continue;
+      if (counter <= 0) {
+        return {
+          TAG: "Error",
+          _0: "Argument doesn't start with a number."
+        };
+      }
+      let match$1 = str[counter + 1 | 0];
+      if (match$1 !== undefined) {
+        return {
+          TAG: "Error",
+          _0: "Unexpected additional characters after time unit :tf:"
+        };
+      } else {
+        return {
+          TAG: "Ok",
+          _0: [
+            c,
+            counter
+          ]
+        };
+      }
     };
   };
   let x = parse(str, 0);
@@ -49,23 +71,7 @@ function getWaitTime(str) {
     return x;
   }
   let match = x._0;
-  let units;
-  switch (match[0]) {
-    case "d" :
-      units = "Days";
-      break;
-    case "h" :
-      units = "Hours";
-      break;
-    case "m" :
-      units = "Minutes";
-      break;
-    case "s" :
-      units = "Seconds";
-      break;
-    default:
-      units = "Unknown";
-  }
+  let units = strToWaitTime(match[0]);
   if (units === "Unknown") {
     return {
       TAG: "Error",
@@ -171,6 +177,7 @@ async function main(args) {
 }
 
 export {
+  strToWaitTime,
   getWaitTime,
   executeReminder,
   main,

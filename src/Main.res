@@ -17,6 +17,16 @@ type waitTime =
   | Days
   | Unknown
 
+let strToWaitTime = (str: string) => {
+  switch str {
+  | "m" => Minutes
+  | "s" => Seconds
+  | "h" => Hours
+  | "d" => Days
+  | _ => Unknown
+  }
+}
+
 let getWaitTime = (str: string): result<(waitTime, int), string> => {
   let rec parse = (str: string, counter: int): result<(string, int), string> => {
     switch str->String.get(counter) {
@@ -32,15 +42,10 @@ let getWaitTime = (str: string): result<(waitTime, int), string> => {
           //    ^
           // counter = 2
 
-          // TODO: make it check the following case:
-          // 123dic
-          //    ^
-          // It gets the d, and then happily skips along and counts it as Days,
-          // while not giving a crap about anything else that comes afterwards.
-          //
-          // Should probably give an error instead? Makes sense to me
-
-          Ok((c, counter))
+          switch str->String.get(counter + 1) {
+          | Some(_) => Error("Unexpected additional characters after time unit :tf:")
+          | None => Ok((c, counter))
+          }
         } else {
           Error("Argument doesn't start with a number.")
         }
@@ -56,13 +61,7 @@ let getWaitTime = (str: string): result<(waitTime, int), string> => {
 
   let? Ok((unitStr, count)) = parse(str, 0)
 
-  let units = switch unitStr {
-  | "m" => Minutes
-  | "s" => Seconds
-  | "h" => Hours
-  | "d" => Days
-  | _ => Unknown
-  }
+  let units = strToWaitTime(unitStr)
 
   if units == Unknown {
     Error(
